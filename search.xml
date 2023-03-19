@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>消息队列1</title>
+      <link href="/2022/07/12/xiao-xi-dui-lie-1/"/>
+      <url>/2022/07/12/xiao-xi-dui-lie-1/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>vscode-docker-remote</title>
+      <link href="/2021/10/14/vscode-docker-remote/"/>
+      <url>/2021/10/14/vscode-docker-remote/</url>
+      
+        <content type="html"><![CDATA[<h1 id="步骤">步骤</h1><p><strong>vscode安装插件</strong></p><ul><li><code>Remote - Containers</code></li></ul><p><strong>准备环境</strong></p><p>使用微软提供的</p><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> clone https://github.com/microsoft/vscode-remote-try-cpp.git<span class="token comment"># 然后用vs code打开</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre><figure><img src="https://pic2.zhimg.com/80/v2-fa7c528be4e925a7c53368a2e6ae7bf5_1440w.jpg" alt="img" /><figcaption aria-hidden="true">img</figcaption></figure><p>然后运行一下，试下能不能成功</p><figure><img src="/Users/ywb/Documents/github/blog/public/images/image-20211014161336303.png" alt="image-20211014161336303" /><figcaption aria-hidden="true">image-20211014161336303</figcaption></figure><p>运行后，示例程序如上，那就没问题了</p><p>然后把自己的工程文件复制过来，就可以愉快的玩耍了</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> tools </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> docker </tag>
+            
+            <tag> vscode </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>在校园网中使用路由器(锐捷)</title>
+      <link href="/2021/10/09/tu-po-xiao-yuan-wang-zhong-duan-xian-zhi-rui-jie/"/>
+      <url>/2021/10/09/tu-po-xiao-yuan-wang-zhong-duan-xian-zhi-rui-jie/</url>
+      
+        <content type="html"><![CDATA[<h2 id="问题">问题</h2><p>问题描述：多网卡检测掉线，多用户检测(使用安卓模拟器)掉线</p><p>目标：能使用路由器认证开Wi-Fi且稳定</p><p>以XX学校为例分析：</p><p>多网卡检测过程主要是客户端完成，win平台有802.xx进程存在，且杀死后一段时间不会断网，若进程运行的情况下开启Wi-Fi会直接提示多网卡检测，若挂起该进程，不会多网卡检测，但是一段时间后会断网。若使用Android模拟器，会提示多用户在线使用。</p><ol type="1"><li>使用锐捷客户端认证，版本为(后补)</li><li>802进程负责认证与多网卡检测，反编译修改检测逻辑放弃，我没这个水平:rofl:</li><li>挂起后一段时间不可用，应该是心跳包没发</li><li>多用户检测，应该是和数据包有关</li><li>路由器帮助认证需要路由器固件，需要开源的，意味着可以白嫖加定制化:dog:</li><li>认证机制需要抓包解决，直接找开源软件吧，毕竟没这个实力逆向分析:dog:</li></ol><p><strong>总结：需要解决认证问题与多用户检测问题</strong></p><h2 id="方案">方案</h2><p>直接搜索<code>路由器 开源 固件</code>和<code>锐捷 第三方 认证</code>出结果</p><p>最终选择：</p><ul><li><a href="https://github.com/coolsnowwolf/lede">openwrt(lede)</a>解决路由器固件问题</li><li><a href="https://github.com/hyrathb/mentohust">mentohust</a>解决锐捷认证问题</li></ul><p><strong>首先膜拜一下大佬🧍‍♂️，感谢提供工具!</strong></p><blockquote><p>Openwrt 也可以说是 lede，应该是说是分支不一样具体可搜索他们的发展历史，这里我将他们等同，且对应的是这位<a href="https://github.com/coolsnowwolf">coolsnowwolf</a>大佬的。</p><p>然后是mentohust，最初代码是发布在<a href="https://code.google.com/archive/p/mentohust/">google code</a>的，提供了ubuntu等linux系统的安装包，需要的直接下载，我这里需要源码编译，所以用的github上的。</p><p>然后再贴个使用说明<a href="https://wiki.ubuntu.org.cn/%E9%94%90%E6%8D%B7%E3%80%81%E8%B5%9B%E5%B0%94%E8%AE%A4%E8%AF%81MentoHUST">地址</a>。<strong>基本上</strong>按照这个来没问题。工具就是可执行文件，需要给他提供运行的参数参数，重要的有4个，分别是：</p><ul><li>用户名和密码</li><li>组播方式</li><li>DHCP方式</li></ul><p>使用的时候会提示xxx库找不到，不影响使用</p></blockquote><h2 id="实践">实践</h2><p>第一步看 <a href="https://github.com/coolsnowwolf/lede">openwrt(lede)</a> 步骤，就是准备环境，然后一顿 CV 完成:dog:</p><ol type="1"><li>准备编译环境</li><li>执行编译</li><li>编译锐捷认证mentohust源码</li><li>编译<a href="https://github.com/CHN-beta/xmurp-ua">xmurp-ua</a>--这个是用来解决多用户检测的</li><li>将固件写入路由器</li></ol><p><strong>准备编译环境</strong></p><p>需要Ubuntu系统，推荐 64bit Ubuntu 20.04 LTS x64，其实18的也行</p><p>我列了几个选项，操作难度由低到高：</p><ul><li>Win+虚拟机</li><li>WSL或WSL2，体验过WSL，但没用它编译过，不知道有没有坑</li><li>PVE或ESXI主机，因为我有主机，所以我用的这个，然后我的路由器也运行在上面</li><li>GitHub Action，这个不懂GitHub配置设置和lede的配置文件比较难搞</li></ul><p>除此之外还需要代理工具，因为许多编译所需的依赖需要下载，而服务器在国外，没有代理会很慢，请开全局代理，<strong>没有的话不用试了，会慢的怀疑人生，而且伴随着下载失败</strong>。但是使用GitHub Action的方式不需要代理，因为服务器就在国外。</p><h3 id="执行编译">执行编译</h3><p>贴一下大佬的代码：</p><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 更换软件源，默认是国外的，可替换换国内镜像，这里给的清华大学的镜像</span><span class="token comment"># 教程 https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/</span><span class="token comment"># 更新软件包</span><span class="token function">sudo</span> <span class="token function">apt-get</span> update<span class="token comment"># 安装各种依赖</span><span class="token function">sudo</span> <span class="token function">apt-get</span> -y <span class="token function">install</span> build-essential asciidoc binutils <span class="token function">bzip2</span> <span class="token function">gawk</span> gettext <span class="token function">git</span> libncurses5-dev libz-dev patch python3 python2.7 <span class="token function">unzip</span> zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib antlr3 gperf <span class="token function">wget</span> <span class="token function">curl</span> swig <span class="token function">rsync</span><span class="token comment"># 下载源码，文件还挺大，有代理会更快</span><span class="token function">git</span> clone https://github.com/coolsnowwolf/lede<span class="token comment"># 进入源码目录</span><span class="token builtin class-name">cd</span> lede<span class="token comment"># 更新并安装软件包</span>./scripts/feeds update -a./scripts/feeds <span class="token function">install</span> -a<span class="token comment"># 设置配置，这个是图形化界面，一般来说要工具路由器型号来选择3个比较重要的参数</span><span class="token comment"># 架构 例如 x86</span><span class="token comment"># </span><span class="token comment"># 也可以先设置个默认的，后续再改，先把工具链编译好，后续再编译就很快了</span><span class="token function">make</span> menuconfig<span class="token comment"># 下载dl库（国内请尽量全局科学上网）</span><span class="token comment"># -j8 八线程(应该是) V=s 详细输出运行日志，方便排查问题</span><span class="token function">make</span> -j8 download <span class="token assign-left variable">V</span><span class="token operator">=</span>s <span class="token comment"># 开始编译 -j1 后面是线程数。第一次编译推荐用单线程）即可开始编译你要的固件了。</span><span class="token comment"># 多线程会快些，但是可能由于多线程模块编译顺序不可控，导致依赖找不到报错，二次编译就可以开多线程了</span><span class="token function">make</span> -j1 <span class="token assign-left variable">V</span><span class="token operator">=</span>s<span class="token comment"># 二次编译</span><span class="token function">make</span> -j<span class="token variable"><span class="token variable">$((</span>$<span class="token punctuation">(</span>nproc<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token variable">))</span></span> <span class="token assign-left variable">V</span><span class="token operator">=</span>s<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>最后固件输出目录为：bin/targets</p><p>准备mentohust与xmura编译，抄一下他们的代码如下：</p><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 确保当前在 lede 根目录</span><span class="token comment"># 克隆源码</span><span class="token function">git</span> clone https://github.com/hyrathb/mentohust.git package/mentohust<span class="token function">git</span> clone https://github.com/CHN-beta/xmurp-ua.git package/xmurp-ua<span class="token comment"># 然后menuconfig,在编译选项启用这俩</span><span class="token comment"># mentohust路径为 ：</span><span class="token comment"># 模块输出路径为：</span><span class="token comment"># xmurp-ua 路径为：</span><span class="token comment"># 模块输出路径为：</span><span class="token comment"># 按空格切换，M代表编译成模块或者说是安装包，*代表编译到路由器固件中</span><span class="token function">make</span> menuconfig<span class="token comment"># 二次编译，固件路径为：</span><span class="token function">make</span> -j<span class="token variable"><span class="token variable">$((</span>$<span class="token punctuation">(</span>nproc<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token variable">))</span></span> <span class="token assign-left variable">V</span><span class="token operator">=</span>s<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><h3 id="写入路由器">写入路由器</h3><p><strong>刷机不慎会导致路由器变成砖！！！</strong></p><p>建议先刷不死鸟，breed web，若固件刷入失败，不至于路由器变砖。没这个:dog:</p><p>只刷过路由器固件，因为买来的时候就带了不死鸟固件。同时我也用的虚拟机运行路由器固件，随便造不会坏:dog:</p><p>具体操作就很简单了，常规点击操作就行了。一般是按下reset键，然后接入电源，等待指示灯闪烁，松开，插入网线，192.168.1.1是管理地址</p><p><strong>未完待续</strong></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> openwrt </category>
+          
+          <category> lede </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 锐捷 </tag>
+            
+            <tag> 校园网 </tag>
+            
+            <tag> lede </tag>
+            
+            <tag> openwrt </tag>
+            
+            <tag> 暨南大学 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>算法笔记</title>
+      <link href="/2021/09/14/suan-fa-bi-ji/"/>
+      <url>/2021/09/14/suan-fa-bi-ji/</url>
+      
+        <content type="html"><![CDATA[<h2 id="描述">描述</h2><blockquote><h4 id="存在重复元素-iii"><a href="https://leetcode-cn.com/problems/contains-duplicate-iii/">存在重复元素 III</a></h4><p>给你一个整数数组 nums 和两个整数 k 和 t 。请你判断是否存在 两个不同下标 i 和 j，使得 abs(nums[i] - nums[j]) &lt;= t ，同时又满足 abs(i - j) &lt;= k 。</p><p>如果存在则返回 true，不存在返回 false。</p></blockquote><h2 id="思路">思路</h2><p>题意比较清晰，存在两个约束，判断是否存在满足两约束的数对。最直观的解法两两判断，时间复杂度为 <span class="math inline">\(O(N^2)\)</span></p><ul><li>序号在原数组已经是有序了，对于序号约束可以用滑动窗口大小保证；</li><li>元素大小是否满足约束，需要检查</li></ul><p>对于每个数需要知道当前序号前后<span class="math inline">\(K\)</span>个数字的最小值或最大值与当前只的差的绝对值是否满足条件，若用线性扫描时间复杂度将会是<span class="math inline">\(O(N*K)\)</span>，所以需要找到快速获取某集合内最大或最小的值，并且能支持高效修改，红黑树显然满足条件，对应<code>Java</code>中的<code>TreeSet</code>。</p><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">Solution</span> <span class="token punctuation">&#123;</span>    <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">containsNearbyAlmostDuplicate</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> nums<span class="token punctuation">,</span> <span class="token keyword">int</span> k<span class="token punctuation">,</span> <span class="token keyword">int</span> t<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>        <span class="token keyword">int</span> n <span class="token operator">=</span> nums<span class="token punctuation">.</span>length<span class="token punctuation">;</span>        <span class="token class-name">TreeSet</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Long</span><span class="token punctuation">></span></span> ts <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">TreeSet</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>            <span class="token class-name">Long</span> u <span class="token operator">=</span> nums<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token number">1L</span><span class="token punctuation">;</span>            <span class="token comment">// 从 ts 中找到小于等于 u 的最大值（小于等于 u 的最接近 u 的数）</span>            <span class="token class-name">Long</span> l <span class="token operator">=</span> ts<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>u<span class="token punctuation">)</span><span class="token punctuation">;</span>             <span class="token comment">// 从 ts 中找到大于等于 u 的最小值（大于等于 u 的最接近 u 的数）</span>            <span class="token class-name">Long</span> r <span class="token operator">=</span> ts<span class="token punctuation">.</span><span class="token function">ceiling</span><span class="token punctuation">(</span>u<span class="token punctuation">)</span><span class="token punctuation">;</span>             <span class="token keyword">if</span><span class="token punctuation">(</span>l <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> u <span class="token operator">-</span> l <span class="token operator">&lt;=</span> t<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>            <span class="token keyword">if</span><span class="token punctuation">(</span>r <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> r <span class="token operator">-</span> u <span class="token operator">&lt;=</span> t<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>            <span class="token comment">// 将当前数加到 ts 中，并移除下标范围不在 [max(0, i - k), i) 的数（维持滑动窗口大小为 k）</span>            ts<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>u<span class="token punctuation">)</span><span class="token punctuation">;</span>            <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">>=</span> k<span class="token punctuation">)</span> ts<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>nums<span class="token punctuation">[</span>i <span class="token operator">-</span> k<span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token number">1L</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token punctuation">&#125;</span>        <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>    <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><h2 id="官方解法">官方解法</h2><p>判断某个元素<span class="math inline">\(N\)</span>前后<span class="math inline">\(K\)</span>个单位距离的数字是否已存在：</p><ul><li>取出离<span class="math inline">\(N\)</span>绝对值最小的值,有序Set红黑树实现</li><li>讲数据分块映射,例如对于<span class="math inline">\(1...N\)</span>的数据,以<span class="math inline">\(K\)</span>个为一块,这样首先获取当前的<span class="math inline">\(num\)</span>的映射值,判断对用的桶是否存在元素,再判断相邻的桶是否存在即可.</li></ul><p><strong>示例代码</strong></p><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">Solution</span> <span class="token punctuation">&#123;</span>    <span class="token keyword">long</span> size<span class="token punctuation">;</span>    <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">containsNearbyAlmostDuplicate</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> nums<span class="token punctuation">,</span> <span class="token keyword">int</span> k<span class="token punctuation">,</span> <span class="token keyword">int</span> t<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>        <span class="token keyword">int</span> n <span class="token operator">=</span> nums<span class="token punctuation">.</span>length<span class="token punctuation">;</span>        <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Long</span><span class="token punctuation">,</span> <span class="token class-name">Long</span><span class="token punctuation">></span></span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        size <span class="token operator">=</span> t <span class="token operator">+</span> <span class="token number">1L</span><span class="token punctuation">;</span>        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>            <span class="token keyword">long</span> u <span class="token operator">=</span> nums<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token number">1L</span><span class="token punctuation">;</span>            <span class="token keyword">long</span> idx <span class="token operator">=</span> <span class="token function">getIdx</span><span class="token punctuation">(</span>u<span class="token punctuation">)</span><span class="token punctuation">;</span>            <span class="token comment">// 目标桶已存在（桶不为空），说明前面已有 [u - t, u + t] 范围的数字</span>            <span class="token keyword">if</span> <span class="token punctuation">(</span>map<span class="token punctuation">.</span><span class="token function">containsKey</span><span class="token punctuation">(</span>idx<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>            <span class="token comment">// 检查相邻的桶</span>            <span class="token keyword">long</span> l <span class="token operator">=</span> idx <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> r <span class="token operator">=</span> idx <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>            <span class="token keyword">if</span> <span class="token punctuation">(</span>map<span class="token punctuation">.</span><span class="token function">containsKey</span><span class="token punctuation">(</span>l<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> u <span class="token operator">-</span> map<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>l<span class="token punctuation">)</span> <span class="token operator">&lt;=</span> t<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>            <span class="token keyword">if</span> <span class="token punctuation">(</span>map<span class="token punctuation">.</span><span class="token function">containsKey</span><span class="token punctuation">(</span>r<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> map<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>r<span class="token punctuation">)</span> <span class="token operator">-</span> u <span class="token operator">&lt;=</span> t<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>            <span class="token comment">// 建立目标桶</span>            map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>idx<span class="token punctuation">,</span> u<span class="token punctuation">)</span><span class="token punctuation">;</span>            <span class="token comment">// 移除下标范围不在 [max(0, i - k), i) 内的桶</span>            <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">>=</span> k<span class="token punctuation">)</span> map<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token function">getIdx</span><span class="token punctuation">(</span>nums<span class="token punctuation">[</span>i <span class="token operator">-</span> k<span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token number">1L</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token punctuation">&#125;</span>        <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>    <span class="token punctuation">&#125;</span>    <span class="token keyword">long</span> <span class="token function">getIdx</span><span class="token punctuation">(</span><span class="token keyword">long</span> u<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>        <span class="token keyword">return</span> u <span class="token operator">>=</span> <span class="token number">0</span> <span class="token operator">?</span> u <span class="token operator">/</span> size <span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>u <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">/</span> size<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>    <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><h2 id="总结">总结</h2>]]></content>
+      
+      
+      <categories>
+          
+          <category> 算法 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 滑动窗口 </tag>
+            
+            <tag> 中等 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>flutter</title>
+      <link href="/2021/09/13/flutter-0/"/>
+      <url>/2021/09/13/flutter-0/</url>
+      
+        <content type="html"><![CDATA[<h2 id="widget的build方法在应该在state还是widget">Widget的build方法在应该在state还是widget</h2>]]></content>
+      
+      
+      <categories>
+          
+          <category> 学习 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> flutter </tag>
+            
+            <tag> dart </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Flutter</title>
+      <link href="/2021/09/13/flutter/"/>
+      <url>/2021/09/13/flutter/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Spring Framwork 1</title>
+      <link href="/2021/09/01/spring-framwork-1/"/>
+      <url>/2021/09/01/spring-framwork-1/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Hello World</title>
+      <link href="/2021/08/29/hello-world/"/>
+      <url>/2021/08/29/hello-world/</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="quick-start">Quick Start</h2><h3 id="create-a-new-post">Create a new post</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="run-server">Run server</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo server<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="generate-static-files">Generate static files</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo generate<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="deploy-to-remote-sites">Deploy to remote sites</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo deploy<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>记录一次IDEA插件开发</title>
+      <link href="/2021/07/06/ji-lu-yi-ci-idea-cha-jian-kai-fa/"/>
+      <url>/2021/07/06/ji-lu-yi-ci-idea-cha-jian-kai-fa/</url>
+      
+        <content type="html"><![CDATA[<h2 id="idea插件介绍">IDEA插件介绍</h2><p>生成“分类”页并添加tpye属性,进入博客目录。执行命令下方命令</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 实战 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JAVA </tag>
+            
+            <tag> IDEA </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>龙书学习记录</title>
+      <link href="/2021/07/06/long-shu/"/>
+      <url>/2021/07/06/long-shu/</url>
+      
+        <content type="html"><![CDATA[<p>Vec</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 编译 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 编译 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
+</search>
